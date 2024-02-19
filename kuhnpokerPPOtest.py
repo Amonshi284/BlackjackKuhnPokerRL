@@ -1,4 +1,4 @@
-import kuhnpoker
+import kuhnpokerenv.kuhnpoker
 from os.path import exists
 from stable_baselines3 import PPO
 import gymnasium as gym

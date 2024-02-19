@@ -1,5 +1,4 @@
 from basicStrategyBlackJack import BasicStrategyChart
-import blackjack
 import gymnasium as gym
 MAX_TOTAL_ROUNDS = 100000
 env = gym.make('blackjack/BlackJack-v0.1.1')

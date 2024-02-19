@@ -1,10 +1,8 @@
-import blackjack
+import blackjackenv.blackjack
 from os.path import exists
 
-from stable_baselines3 import PPO
 from sb3_contrib import MaskablePPO
 from sb3_contrib.common.maskable.policies import MaskableActorCriticPolicy
-from stable_baselines3.common.env_util import make_vec_env
 import gymnasium as gym
 from sb3_contrib.common.wrappers import ActionMasker
 
@@ -58,13 +56,13 @@ if __name__ == '__main__':
 
 
     """for _ in range(10):
-        observation, info = env.reset()
+        observation, info = envs.reset()
         print(observation)
         while True:
             action = int(input("Enter your action:\n1) stick\n2) hit\n3) double down\n4) split\n5) surrender")) - 1
-            observation, reward, terminated, truncated, info = env.step(action)
+            observation, reward, terminated, truncated, info = envs.step(action)
             print(observation, terminated, reward)
             if terminated or truncated:
                 break
     
-    env.close()"""
+    envs.close()"""
