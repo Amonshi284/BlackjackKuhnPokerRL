@@ -104,8 +104,8 @@ class BlackjackEnv(gym.Env):
             if self.sab and is_natural(self.player) and not is_natural(self.dealer):
                 # Player automatically wins. Rules consistent with S&B
                 self.reward += 1.0
-            elif not self.sab and self.natural and is_natural(self.player):
-                # Natural gives extra points, but doesn't autowin. Legacy implementation
+            elif not self.sab and self.natural and is_natural(self.player) and not is_natural(self.dealer):
+                # Natural gives extra points
                 self.reward += 1.5
             else:
                 self.reward += cmp(score(self.player), score(self.dealer))
@@ -120,8 +120,8 @@ class BlackjackEnv(gym.Env):
                     if self.sab and is_natural(self.player) and not is_natural(self.dealer):
                         # Player automatically wins. Rules consistent with S&B
                         self.reward += 2.0
-                    elif not self.sab and self.natural and is_natural(self.player):
-                        # Natural gives extra points, but doesn't autowin. Legacy implementation
+                    elif not self.sab and self.natural and is_natural(self.player) and not is_natural(self.dealer):
+                        # Natural gives extra points
                         self.reward += 3.0
                     else:
                         self.reward += cmp(score(self.player), score(self.dealer)) * 2.0
