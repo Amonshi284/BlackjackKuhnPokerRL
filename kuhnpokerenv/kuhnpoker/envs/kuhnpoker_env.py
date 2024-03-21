@@ -22,11 +22,12 @@ class KuhnPokerEnv(gym.Env):
 
     def _get_opp_act(self):
         if self.opp_type == "random":
-            return self.np_random.integers(0, 1)
+            return self.np_random.integers(1, 2)
         else:
-            return kuhnpokerenv.kuhnpoker.envs.optimal_agent_kuhn.get_optimal_action(obs=[self.opponent, self.player_act],
-                                                                        start=self.start,
-                                                                        alpha=self.alpha, random=self.np_random)
+            return kuhnpokerenv.kuhnpoker.envs.optimal_agent_kuhn.get_optimal_action(obs=[self.opponent,
+                                                                                          self.player_act],
+                                                                                     start=self.start, alpha=self.alpha,
+                                                                                     random=self.np_random)
 
     def reset(self, seed=None, options=None):
         super().reset(seed=seed)

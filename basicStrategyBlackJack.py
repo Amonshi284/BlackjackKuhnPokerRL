@@ -11,81 +11,51 @@ class Moves(Enum):
 
 class BasicStrategyChart:
     hard_hand = [
-        [Moves.H.value, Moves.H.value, Moves.H.value, Moves.H.value, Moves.H.value, Moves.H.value, Moves.H.value,
-         Moves.H.value, Moves.H.value, Moves.H.value],
-        [Moves.H.value, Moves.H.value, Moves.H.value, Moves.H.value, Moves.H.value, Moves.H.value, Moves.H.value,
-         Moves.H.value, Moves.H.value, Moves.H.value],
-        [Moves.H.value, Moves.H.value, Moves.H.value, Moves.H.value, Moves.H.value, Moves.H.value, Moves.H.value,
-         Moves.H.value, Moves.H.value, Moves.H.value],
-        [Moves.H.value, Moves.H.value, Moves.H.value, Moves.H.value, Moves.H.value, Moves.H.value, Moves.H.value,
-         Moves.H.value, Moves.H.value, Moves.H.value],
-        [Moves.H.value, Moves.D.value, Moves.D.value, Moves.D.value, Moves.D.value, Moves.H.value, Moves.H.value,
-         Moves.H.value, Moves.H.value, Moves.H.value],
-        [Moves.D.value, Moves.D.value, Moves.D.value, Moves.D.value, Moves.D.value, Moves.D.value, Moves.D.value,
-         Moves.D.value, Moves.H.value, Moves.H.value],
-        [Moves.D.value, Moves.D.value, Moves.D.value, Moves.D.value, Moves.D.value, Moves.D.value, Moves.D.value,
-         Moves.D.value, Moves.D.value, Moves.H.value],
-        [Moves.H.value, Moves.H.value, Moves.S.value, Moves.S.value, Moves.S.value, Moves.H.value, Moves.H.value,
-         Moves.H.value, Moves.H.value, Moves.H.value],
-        [Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value, Moves.H.value, Moves.H.value,
-         Moves.H.value, Moves.H.value, Moves.H.value],
-        [Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value, Moves.H.value, Moves.H.value,
-         Moves.H.value, Moves.H.value, Moves.H.value],
-        [Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value, Moves.H.value, Moves.H.value,
-         Moves.H.value, Moves.R.value, Moves.H.value],
-        [Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value, Moves.H.value, Moves.H.value,
-         Moves.R.value, Moves.R.value, Moves.R.value],
-        [Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value,
-         Moves.S.value, Moves.S.value, Moves.S.value],
-        [Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value,
-         Moves.S.value, Moves.S.value, Moves.S.value],
-        [Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value,
-         Moves.S.value, Moves.S.value, Moves.S.value],
-        [Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value,
-         Moves.S.value, Moves.S.value, Moves.S.value],
-        [Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value,
-         Moves.S.value, Moves.S.value, Moves.S.value],
+        # Dealers open card
+        #   2        3        4        5        6        7        8        9       10        A
+        [Moves.H, Moves.H, Moves.H, Moves.H, Moves.H, Moves.H, Moves.H, Moves.H, Moves.H, Moves.H],
+        [Moves.H, Moves.H, Moves.H, Moves.H, Moves.H, Moves.H, Moves.H, Moves.H, Moves.H, Moves.H],
+        [Moves.H, Moves.H, Moves.H, Moves.H, Moves.H, Moves.H, Moves.H, Moves.H, Moves.H, Moves.H],
+        [Moves.H, Moves.H, Moves.H, Moves.H, Moves.H, Moves.H, Moves.H, Moves.H, Moves.H, Moves.H],
+        [Moves.H, Moves.D, Moves.D, Moves.D, Moves.D, Moves.H, Moves.H, Moves.H, Moves.H, Moves.H],
+        [Moves.D, Moves.D, Moves.D, Moves.D, Moves.D, Moves.D, Moves.D, Moves.D, Moves.H, Moves.H],
+        [Moves.D, Moves.D, Moves.D, Moves.D, Moves.D, Moves.D, Moves.D, Moves.D, Moves.D, Moves.H],
+        [Moves.H, Moves.H, Moves.S, Moves.S, Moves.S, Moves.H, Moves.H, Moves.H, Moves.H, Moves.H],
+        [Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.H, Moves.H, Moves.H, Moves.H, Moves.H],
+        [Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.H, Moves.H, Moves.H, Moves.H, Moves.H],
+        [Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.H, Moves.H, Moves.H, Moves.R, Moves.H],
+        [Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.H, Moves.H, Moves.R, Moves.R, Moves.R],
+        [Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S],
+        [Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S],
+        [Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S],
+        [Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S],
+        [Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S],
     ]
     soft_hand = [
-        [Moves.H.value, Moves.H.value, Moves.H.value, Moves.D.value, Moves.D.value, Moves.H.value, Moves.H.value,
-         Moves.H.value, Moves.H.value, Moves.H.value],
-        [Moves.H.value, Moves.H.value, Moves.H.value, Moves.D.value, Moves.D.value, Moves.H.value, Moves.H.value,
-         Moves.H.value, Moves.H.value, Moves.H.value],
-        [Moves.H.value, Moves.H.value, Moves.D.value, Moves.D.value, Moves.D.value, Moves.H.value, Moves.H.value,
-         Moves.H.value, Moves.H.value, Moves.H.value],
-        [Moves.H.value, Moves.H.value, Moves.D.value, Moves.D.value, Moves.D.value, Moves.H.value, Moves.H.value,
-         Moves.H.value, Moves.H.value, Moves.H.value],
-        [Moves.H.value, Moves.D.value, Moves.D.value, Moves.D.value, Moves.D.value, Moves.H.value, Moves.H.value,
-         Moves.H.value, Moves.H.value, Moves.H.value],
-        [Moves.S.value, Moves.D.value, Moves.D.value, Moves.D.value, Moves.D.value, Moves.S.value, Moves.S.value,
-         Moves.H.value, Moves.H.value, Moves.H.value],
-        [Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value,
-         Moves.S.value, Moves.S.value, Moves.S.value],
-        [Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value,
-         Moves.S.value, Moves.S.value, Moves.S.value],
-        [Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value,
-         Moves.S.value, Moves.S.value, Moves.S.value],
+        # Dealers open card
+        #   2        3        4        5        6        7        8        9       10        A
+        [Moves.H, Moves.H, Moves.H, Moves.D, Moves.D, Moves.H, Moves.H, Moves.H, Moves.H, Moves.H],  # 13
+        [Moves.H, Moves.H, Moves.H, Moves.D, Moves.D, Moves.H, Moves.H, Moves.H, Moves.H, Moves.H],  # 14
+        [Moves.H, Moves.H, Moves.D, Moves.D, Moves.D, Moves.H, Moves.H, Moves.H, Moves.H, Moves.H],  # 15
+        [Moves.H, Moves.H, Moves.D, Moves.D, Moves.D, Moves.H, Moves.H, Moves.H, Moves.H, Moves.H],  # 16
+        [Moves.H, Moves.D, Moves.D, Moves.D, Moves.D, Moves.H, Moves.H, Moves.H, Moves.H, Moves.H],  # 17
+        [Moves.S, Moves.D, Moves.D, Moves.D, Moves.D, Moves.S, Moves.S, Moves.H, Moves.H, Moves.H],  # 18
+        [Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S],  # 19
+        [Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S],  # 20
+        [Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S],  # 21
     ]
     pair_hand = [
-        [Moves.P.value, Moves.P.value, Moves.P.value, Moves.P.value, Moves.P.value, Moves.P.value, Moves.P.value,
-         Moves.P.value, Moves.P.value, Moves.P.value],
-        [Moves.P.value, Moves.P.value, Moves.P.value, Moves.P.value, Moves.P.value, Moves.P.value, Moves.H.value,
-         Moves.H.value, Moves.H.value, Moves.H.value],
-        [Moves.P.value, Moves.P.value, Moves.P.value, Moves.P.value, Moves.P.value, Moves.P.value, Moves.H.value,
-         Moves.H.value, Moves.H.value, Moves.H.value],
-        [Moves.H.value, Moves.H.value, Moves.H.value, Moves.P.value, Moves.P.value, Moves.H.value, Moves.H.value,
-         Moves.H.value, Moves.H.value, Moves.H.value],
-        [Moves.D.value, Moves.D.value, Moves.D.value, Moves.D.value, Moves.D.value, Moves.D.value, Moves.D.value,
-         Moves.D.value, Moves.H.value, Moves.H.value],
-        [Moves.P.value, Moves.P.value, Moves.P.value, Moves.P.value, Moves.P.value, Moves.H.value, Moves.H.value,
-         Moves.H.value, Moves.H.value, Moves.H.value],
-        [Moves.P.value, Moves.P.value, Moves.P.value, Moves.P.value, Moves.P.value, Moves.P.value, Moves.H.value,
-         Moves.H.value, Moves.H.value, Moves.H.value],
-        [Moves.P.value, Moves.P.value, Moves.P.value, Moves.P.value, Moves.P.value, Moves.P.value, Moves.P.value,
-         Moves.P.value, Moves.P.value, Moves.P.value],
-        [Moves.P.value, Moves.P.value, Moves.P.value, Moves.P.value, Moves.P.value, Moves.S.value, Moves.P.value,
-         Moves.P.value, Moves.S.value, Moves.S.value],
-        [Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value, Moves.S.value,
-         Moves.S.value, Moves.S.value, Moves.S.value],
+        # Dealers open card
+        #   2        3        4        5        6        7        8        9       10        A
+        [Moves.P, Moves.P, Moves.P, Moves.P, Moves.P, Moves.P, Moves.P, Moves.P, Moves.P, Moves.P],  # A
+        [Moves.P, Moves.P, Moves.P, Moves.P, Moves.P, Moves.P, Moves.H, Moves.H, Moves.H, Moves.H],  # 2
+        [Moves.P, Moves.P, Moves.P, Moves.P, Moves.P, Moves.P, Moves.H, Moves.H, Moves.H, Moves.H],  # 3
+        [Moves.H, Moves.H, Moves.H, Moves.P, Moves.P, Moves.H, Moves.H, Moves.H, Moves.H, Moves.H],  # 4
+        [Moves.D, Moves.D, Moves.D, Moves.D, Moves.D, Moves.D, Moves.D, Moves.D, Moves.H, Moves.H],  # 5
+        [Moves.P, Moves.P, Moves.P, Moves.P, Moves.P, Moves.H, Moves.H, Moves.H, Moves.H, Moves.H],  # 6
+        [Moves.P, Moves.P, Moves.P, Moves.P, Moves.P, Moves.P, Moves.H, Moves.H, Moves.H, Moves.H],  # 7
+        [Moves.P, Moves.P, Moves.P, Moves.P, Moves.P, Moves.P, Moves.P, Moves.P, Moves.P, Moves.P],  # 8
+        [Moves.P, Moves.P, Moves.P, Moves.P, Moves.P, Moves.S, Moves.P, Moves.P, Moves.S, Moves.S],  # 9
+        [Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S, Moves.S],  # 10
 
     ]

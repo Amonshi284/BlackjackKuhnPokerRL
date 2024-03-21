@@ -70,7 +70,7 @@ class BlackjackEnv(gym.Env):
         "render_fps": 4,
     }
 
-    def __init__(self, render_mode: Optional[str] = None, natural=False, sab=False):
+    def __init__(self, render_mode: Optional[str] = None, natural=False, sab=False, peek=False):
         self.action_space = spaces.Discrete(5)
         # Player hand, dealer hand, soft ace in player hand, pair in player hand
         self.observation_space = spaces.MultiDiscrete(np.array([32, 32, 2, 2]))
@@ -78,6 +78,7 @@ class BlackjackEnv(gym.Env):
         # Flag to payout 1.5 on a "natural" blackjack win, like casino rules
         # Ref: http://www.bicyclecards.com/how-to-play/blackjack/
         self.natural = natural
+        self.peek = peek
 
         # Flag for full agreement with the (Sutton and Barto, 2018) definition. Overrides self.natural
         self.sab = sab
@@ -103,39 +104,32 @@ class BlackjackEnv(gym.Env):
             if self.sab and is_natural(self.player) and not is_natural(self.dealer):
                 # Player automatically wins. Rules consistent with S&B
                 self.reward += 1.0
-            elif (
-                    not self.sab
-                    and self.natural
-                    and is_natural(self.player)
-            ):
+            elif not self.sab and self.natural and is_natural(self.player):
                 # Natural gives extra points, but doesn't autowin. Legacy implementation
                 self.reward += 1.5
             else:
                 self.reward += cmp(score(self.player), score(self.dealer))
         elif action == 2:  # double down: add a card to players hand, double bet, play out dealers hand and score
-            self.player.append(draw_card(self.np_random))
-            if is_bust(self.player):
-                self.reward += -2.0
-            else:
-                while sum_hand(self.dealer) < 17:
-                    self.dealer.append(draw_card(self.np_random))
-                if self.sab and is_natural(self.player) and not is_natural(self.dealer):
-                    # Player automatically wins. Rules consistent with S&B
-                    self.reward += 2.0
-                elif (
-                        not self.sab
-                        and self.natural
-                        and is_natural(self.player)
-                ):
-                    # Natural gives extra points, but doesn't autowin. Legacy implementation
-                    self.reward += 3.0
+            if len(self.player) == 2:
+                self.player.append(draw_card(self.np_random))
+                if is_bust(self.player):
+                    self.reward += -2.0
                 else:
-                    self.reward += cmp(score(self.player), score(self.dealer)) * 2.0
-            self.player, self.player2, self.player3, terminated, self.terminated2, self.terminated3 = is_terminated(
-                self.player, self.player2, self.player3, self.terminated2, self.terminated3
-            )
-        elif action == 3:  # split: only possible with two cards of same rank, split hand in two, place second bet for
-            # second hand, play hands after another
+                    while sum_hand(self.dealer) < 17:
+                        self.dealer.append(draw_card(self.np_random))
+                    if self.sab and is_natural(self.player) and not is_natural(self.dealer):
+                        # Player automatically wins. Rules consistent with S&B
+                        self.reward += 2.0
+                    elif not self.sab and self.natural and is_natural(self.player):
+                        # Natural gives extra points, but doesn't autowin. Legacy implementation
+                        self.reward += 3.0
+                    else:
+                        self.reward += cmp(score(self.player), score(self.dealer)) * 2.0
+                self.player, self.player2, self.player3, terminated, self.terminated2, self.terminated3 = is_terminated(
+                    self.player, self.player2, self.player3, self.terminated2, self.terminated3
+                )
+        elif action == 3:  # split: only possible with two cards of same rank, split hand in two, place second/third bet
+            # for second/third hand, play hands after another
             if len(self.player) == 2 and self.player[0] == self.player[1] and len(self.player2) == 0:
                 self.player2.append(self.player.pop())
                 self.player2.append(draw_card(self.np_random))
@@ -156,6 +150,9 @@ class BlackjackEnv(gym.Env):
 
         if self.render_mode == "human":
             self.render()
+        if is_natural(self.dealer) and self.peek:
+            self.reward = -1
+            terminated = True
         # truncation=False as the time limit is handled by the `TimeLimit` wrapper added during `make`
         return self._get_obs(terminated), self.reward, terminated, False, self._get_info()
 
@@ -167,7 +164,8 @@ class BlackjackEnv(gym.Env):
             return np.array([sum_hand(self.player), self.dealer[0], usable_ace(self.player), pair_in_hand(self.player)])
 
     def _get_info(self):
-        return {"action_mask": [1, 1, 1, 1 if self._get_obs(False)[3] and len(self.player2) == 0 else 0,
+        return {"action_mask": [1, 1, 1 if len(self.player) == 2 and len(self.player2) == 0 else 0,
+                                1 if self._get_obs(False)[3] and len(self.player3) == 0 else 0,
                                 1 if len(self.player) == 2 and len(self.player2) == 0 else 0]}
 
     def action_mask(self):

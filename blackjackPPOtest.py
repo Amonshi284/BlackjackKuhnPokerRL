@@ -6,7 +6,8 @@ from sb3_contrib.common.maskable.policies import MaskableActorCriticPolicy
 import gymnasium as gym
 from sb3_contrib.common.wrappers import ActionMasker
 
-MAX_TOTAL_ROUNDS = 1000
+MAX_TOTAL_ROUNDS = 1000000
+MAX_LEARN_TIMESTEPS = 1000000
 
 
 def mask_fn(env):
@@ -22,8 +23,8 @@ if __name__ == '__main__':
         model = MaskablePPO.load("ppo_blackjack", env)
     else:
         model = MaskablePPO(MaskableActorCriticPolicy, env, verbose=1, tensorboard_log='./blackjack_tensorboard/')
-    model.learn(total_timesteps=1000)
-    model.save("ppo_blackjack")
+        model.learn(total_timesteps=MAX_LEARN_TIMESTEPS)
+        model.save("ppo_blackjack")
 
     rewards = 0
     env.reset()
