@@ -20,7 +20,7 @@ if __name__ == '__main__':
     env.reset(options={"alpha": 0.3, "opponent": "optimal", "start": "player"})
     for i in range(MAX_TOTAL_GAMES):
         print(i)
-        obs, info = env.reset()
+        obs, info = env.reset(options={"alpha": 0.3, "opponent": "optimal", "start": "player"})
         terminated, truncated = False, False
         print(obs)
         while True:

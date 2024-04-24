@@ -70,7 +70,7 @@ class BlackjackEnv(gym.Env):
         "render_fps": 4,
     }
 
-    def __init__(self, render_mode: Optional[str] = None, natural=False, sab=False, peek=False):
+    def __init__(self, render_mode: Optional[str] = None, natural=True, sab=False, peek=True):
         self.action_space = spaces.Discrete(5)
         # Player hand, dealer hand, soft ace in player hand, pair in player hand
         self.observation_space = spaces.MultiDiscrete(np.array([32, 32, 2, 2]))
@@ -151,8 +151,11 @@ class BlackjackEnv(gym.Env):
         if self.render_mode == "human":
             self.render()
         if is_natural(self.dealer) and self.peek:
-            self.reward = -1
             terminated = True
+            if is_natural(self.player):
+                self.reward = 0
+            else:
+                self.reward = -1
         # truncation=False as the time limit is handled by the `TimeLimit` wrapper added during `make`
         return self._get_obs(terminated), self.reward, terminated, False, self._get_info()
 

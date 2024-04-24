@@ -22,7 +22,8 @@ if __name__ == '__main__':
     if exists("ppo_blackjack.zip"):
         model = MaskablePPO.load("ppo_blackjack", env)
     else:
-        model = MaskablePPO(MaskableActorCriticPolicy, env, verbose=1, tensorboard_log='./blackjack_tensorboard/')
+        model = MaskablePPO(MaskableActorCriticPolicy, env, verbose=1, tensorboard_log='./blackjack_tensorboard/',
+                            stats_window_size=10000)
         model.learn(total_timesteps=MAX_LEARN_TIMESTEPS)
         model.save("ppo_blackjack")
 
@@ -36,11 +37,8 @@ if __name__ == '__main__':
         terminated, truncated = False, False
         print(obs)
         while True:
-            action, _states = model.predict(obs)
-            if action == 3 and not info["action_mask"][3]:
-                action = 1
-            elif action == 4 and not info["action_mask"][4]:
-                action = 1
+            action, _states = model.predict(obs, action_masks=info["action_mask"])
+            print(action)
             obs, reward, terminated, truncated, info = env.step(action)
             print(obs, terminated, reward)
             env.render()
