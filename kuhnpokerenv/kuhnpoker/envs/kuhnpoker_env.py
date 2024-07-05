@@ -1,4 +1,5 @@
 import gymnasium as gym
+import numpy
 from gymnasium import spaces
 import kuhnpokerenv.kuhnpoker.envs.optimal_agent_kuhn
 
@@ -10,19 +11,19 @@ class KuhnPokerEnv(gym.Env):
         self.player = None
         self.player_act = None
         self.opponent = None
-        self.alpha = None
-        self.opp_type = None
+        self.alpha = 0.3
+        self.opp_type = "optimal"
         self.opp_act = None
-        self.start = None
+        self.start = "player"
         self.action_space = spaces.Discrete(2)
         self.observation_space = spaces.MultiDiscrete([3, 3])
 
     def _get_obs(self):
-        return [self.player, self.opp_act]
+        return numpy.array([self.player, self.opp_act])
 
     def _get_opp_act(self):
         if self.opp_type == "random":
-            return self.np_random.integers(1, 2)
+            return self.np_random.integers(1, 3)
         else:
             return kuhnpokerenv.kuhnpoker.envs.optimal_agent_kuhn.get_optimal_action(obs=[self.opponent,
                                                                                           self.player_act],
@@ -34,11 +35,11 @@ class KuhnPokerEnv(gym.Env):
         # 0 = Jack, 1 = Queen, 2 = King
         cards = [0, 1, 2]
         self.alpha = options["alpha"] if (options is not None and options.__contains__("alpha") and
-                                          0 <= options["alpha"] <= 1 / 3) else 0
-        if options is not None and options.__contains__("opponent"):
-            self.opp_type = options["opponent"]
+                                          0 <= options["alpha"] <= 1 / 3) else self.alpha
+        self.opp_type = options["opponent"] if options is not None and options.__contains__("opponent") else (
+            self.opp_type)
         self.start = options["start"] if (options is not None and options.__contains__("start") and
-                                          options["start"] in ("player", "opponent")) else "player"
+                                          options["start"] in ("player", "opponent")) else self.start
         self.timestep = 0
         self.player_act = 0
         self.opp_act = 0
