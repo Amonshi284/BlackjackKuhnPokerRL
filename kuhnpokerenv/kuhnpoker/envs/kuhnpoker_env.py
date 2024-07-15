@@ -6,6 +6,7 @@ import kuhnpokerenv.kuhnpoker.envs.optimal_agent_kuhn
 
 class KuhnPokerEnv(gym.Env):
     def __init__(self):
+        """Initialize the environment with some base parameters"""
         self.timestep = None
         self.done = None
         self.player = None
@@ -19,9 +20,11 @@ class KuhnPokerEnv(gym.Env):
         self.observation_space = spaces.MultiDiscrete([3, 3])
 
     def _get_obs(self):
+        """Get the observation of the current game state in the form of (player card; opponent action)"""
         return numpy.array([self.player, self.opp_act])
 
     def _get_opp_act(self):
+        """Get the opponent action based on either random choice or the optimal action table"""
         if self.opp_type == "random":
             return self.np_random.integers(1, 3)
         else:
@@ -31,13 +34,23 @@ class KuhnPokerEnv(gym.Env):
                                                                                      random=self.np_random)
 
     def reset(self, seed=None, options=None):
+        """Reset the game state
+        Parameters
+        seed    sets the seed for the random number generator.
+        options  consists of alpha, opponent and start.
+                alpha sets the alpha parameter of the optimal strategy opponent.
+                opponent sets the type of opponent to either random or optimal strategy.
+                start sets the starting player to either the player/agent or the opponent."""
         super().reset(seed=seed)
         # 0 = Jack, 1 = Queen, 2 = King
         cards = [0, 1, 2]
+        # Set the alpha parameter of the optimal strategy opponent
         self.alpha = options["alpha"] if (options is not None and options.__contains__("alpha") and
                                           0 <= options["alpha"] <= 1 / 3) else self.alpha
+        # Set the type of opponent either random or optimal strategy
         self.opp_type = options["opponent"] if options is not None and options.__contains__("opponent") else (
             self.opp_type)
+        # Set the starting player either the player/agent or the opponent
         self.start = options["start"] if (options is not None and options.__contains__("start") and
                                           options["start"] in ("player", "opponent")) else self.start
         self.timestep = 0
@@ -55,6 +68,8 @@ class KuhnPokerEnv(gym.Env):
         return observation, {}
 
     def step(self, action):
+        """Take the action and progress the game state
+        if the game is done check for the winner and grant reward"""
         reward = 0
         self.timestep += 1
         self.player_act = action + 1

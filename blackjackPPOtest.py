@@ -21,13 +21,16 @@ if __name__ == '__main__':
     env = gym.make('blackjack/BlackJack-v0.1.1')
     env = ActionMasker(env, mask_fn)
 
+    # If a model for the desired version exists: Load it
     if exists("ppo_blackjack_v5.zip"):
         model = MaskablePPO.load("ppo_blackjack_v5", env)
     else:
+        # The parameter for the network layout
         policy_kwargs = dict(activation_fn=nn.ReLU, net_arch=dict(pi=[32, 32], vf=[32, 32]))
+        # Initialize and train the model, passing on the desired policy and environment; learning_rate, policy_kwargs
+        # and clip_range being the hyperparameters
         model = MaskablePPO(MaskableActorCriticPolicy, env, verbose=1, tensorboard_log='./blackjack_tensorboard/',
-                            stats_window_size=1000000, learning_rate=0.0006, policy_kwargs=policy_kwargs, clip_range=0.4
-                            )
+                            stats_window_size=1000000, learning_rate=0.00015, policy_kwargs=policy_kwargs)
         model.learn(total_timesteps=MAX_LEARN_TIMESTEPS)
         model.save("ppo_blackjack_v5")
 
@@ -43,8 +46,8 @@ if __name__ == '__main__':
         terminated, truncated = False, False
         print(obs)
         while True:
-            # action, _states = model.predict(obs, action_masks=info["action_mask"], deterministic=True)
-            action = env.action_space.sample()
+            # get the models prediction for the best move for the given situation
+            action, _states = model.predict(obs, action_masks=info["action_mask"], deterministic=True)
             actions += 1
             if obs[3] == 1:
                 if obs[2] == 1:

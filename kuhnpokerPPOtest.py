@@ -19,7 +19,8 @@ def eval_kuhn(alpha, opponent, start, actiontable):
         terminated, truncated = False, False
         # print(obs)
         while True:
-            action, _states = model.predict(obs, deterministic=False)
+            action, _states = model.predict(obs, deterministic=False)  # get the models prediction for the best move
+            # sort the action into the action table
             if start == "player":
                 # as starting player
                 if obs[1] == 0:
@@ -113,31 +114,40 @@ def eval_kuhn(alpha, opponent, start, actiontable):
 
 
 if __name__ == '__main__':
+    # Create an instance of the environment and reset it to a starting position
     env = gym.make("kuhnpoker/KuhnPoker-v0")
     env.reset(options={"start": "opponent"})
+    # initialize an action table for traking the actions taken by the agent
     actiontable = [[[[0 for n in range(2)] for m in range(2)] for l in range(3)] for k in range(2)]
+    # If the version of the trained agent exists, load it
     if exists("dqn_kuhn_v8.zip"):
         model = DQN.load("dqn_kuhn_v8", env)
     else:
+        # define the policy architecture
         policy_kwargs = dict(activation_fn=nn.ReLU, net_arch=[32, 32])
+        # Create a new model with specified parameters learning_rate and policy_kwargs and train it as both first and
+        # second player
         model = DQN("MlpPolicy", env, verbose=1, tensorboard_log="kuhn_tensorboard", stats_window_size=100000,
-                    learning_rate=0.0006)
+                    learning_rate=0.0006, policy_kwargs=policy_kwargs)
         print(model.policy)
         model.learn(total_timesteps=MAX_LEARN_TIMESTEPS)
         env.reset(options={"start": "player"})
         model.learn(total_timesteps=MAX_LEARN_TIMESTEPS)
         model.save("dqn_kuhn_v8")
 
+    # Evaluate the trained model
     for i in range(10):
         env.reset(options={"alpha": 0.3, "opponent": "optimal", "start": "player"})
         reward1st, actiontable = eval_kuhn(0.3, "optimal", "player", actiontable)
         reward2nd, actiontable = eval_kuhn(0.3, "optimal", "opponent", actiontable)
+        # Calculate the average rewards
         avg_1st_rewards = reward1st / MAX_TOTAL_GAMES
         avg_2nd_rewards = reward2nd / MAX_TOTAL_GAMES
         avg_reward = avg_1st_rewards + avg_2nd_rewards
         print("Average as 1st player:\t", avg_1st_rewards, "\nAverage as 2nd player:\t", avg_2nd_rewards,
               "\nAverage reward:\t", avg_reward)
 
+    # print out the action tables
     print("first player")
     try:
         print("jackstart:\tcheck:", actiontable[0][0][0][0], "\tbet:", actiontable[0][0][0][1], "\tcheckquote:",

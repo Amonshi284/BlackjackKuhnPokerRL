@@ -7,6 +7,7 @@ env = gym.make('blackjack/BlackJack-v0.1.1', natural=True, peek=True)
 rewards = 0
 wins = 0
 draws = 0
+# Evaluate the basic Strategy for the blackjack environment
 for i in range(MAX_TOTAL_ROUNDS):
     print(i)
     turn = 0

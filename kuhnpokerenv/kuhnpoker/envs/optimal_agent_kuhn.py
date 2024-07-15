@@ -1,4 +1,10 @@
 def get_optimal_action(obs, start, alpha, random):
+    """Get the optimal action for a given state.
+    Parameters
+    obs     card and opponents action
+    start   starting player
+    alpha   probability of choosing the according actions
+    random  random number generator for choosing the random actions"""
     # obs[0] -> 0 = Jack, 1 = Queen, 2 = King
     # obs[1] -> 0 = no action, 1 = check/fold, 2 = bet/call
     if obs[1] == 0:

@@ -86,6 +86,7 @@ class BlackjackEnv(gym.Env):
         self.render_mode = render_mode
 
     def step(self, action):
+        """Take the chosen action and progress the game state. Return rewards if the round is finished"""
         assert self.action_space.contains(action)
         terminated = False
         if action == 1:  # hit: add a card to players hand and return
@@ -160,6 +161,7 @@ class BlackjackEnv(gym.Env):
         return self._get_obs(terminated), self.reward, terminated, False, self._get_info()
 
     def _get_obs(self, terminated):
+        """Get the current observation either as the player can see it during a round or with actual dealer hand"""
         if terminated:
             return np.array([sum_hand(self.player), sum_hand(self.dealer), usable_ace(self.player),
                              pair_in_hand(self.player)])
@@ -167,6 +169,7 @@ class BlackjackEnv(gym.Env):
             return np.array([sum_hand(self.player), self.dealer[0], usable_ace(self.player), pair_in_hand(self.player)])
 
     def _get_info(self):
+        """Get the current action mask"""
         return {"action_mask": [1, 1, 1 if len(self.player) == 2 and len(self.player2) == 0 else 0,
                                 1 if self._get_obs(False)[3] and len(self.player3) == 0 else 0,
                                 1 if len(self.player) == 2 and len(self.player2) == 0 else 0]}
@@ -174,11 +177,8 @@ class BlackjackEnv(gym.Env):
     def action_mask(self):
         return self._get_info()["action_mask"]
 
-    def reset(
-            self,
-            seed: Optional[int] = None,
-            options: Optional[dict] = None,
-    ):
+    def reset(self, seed: Optional[int] = None, options: Optional[dict] = None):
+        """Reset the environment to a starting state with random cards for the player and dealer"""
         super().reset(seed=seed)
         self.dealer = draw_hand(self.np_random)
         self.player = draw_hand(self.np_random)
